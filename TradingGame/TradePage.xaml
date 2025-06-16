@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TradingGame.TradePage"
+             Title="Trade">
+    <ContentPage.BindingContext>
+        <local:TradePageViewModel xmlns:local="clr-namespace:TradingGame" />
+    </ContentPage.BindingContext>
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Padding="8">
+        <!-- Section 1: Stock List -->
+        <CollectionView x:Name="StockListView" Grid.Row="0" SelectionMode="Single" SelectionChanged="OnStockSelected" HeightRequest="90"
+                        ItemsSource="{Binding Stocks}" SelectedItem="{Binding SelectedStock, Mode=TwoWay}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Name}" FontSize="16" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <!-- Section 1b: Real-time Price -->
+        <Label x:Name="PriceLabel" Grid.Row="1" Text="Select a stock to see price" FontSize="16"/>
+        <!-- Section 2: TradingView Chart -->
+        <WebView x:Name="TradingViewWebView" Grid.Row="2"/>
+        <!-- Section 3: Buy/Sell Buttons -->
+        <HorizontalStackLayout x:Name="TradeButtonsLayout" Grid.Row="3" Spacing="16" VerticalOptions="End" HeightRequest="60">
+            <Button Text="Buy" Clicked="OnBuyClicked" HorizontalOptions="FillAndExpand"/>
+            <Button Text="Sell" Clicked="OnSellClicked" HorizontalOptions="FillAndExpand"/>
+        </HorizontalStackLayout>
+        <!-- Section 4: Close Trade Button (hidden by default) -->
+        <Button x:Name="CloseTradeButton" Grid.Row="4" Text="Close Trade" IsVisible="False" Clicked="OnCloseTradeClicked"/>
+    </Grid>
+</ContentPage>

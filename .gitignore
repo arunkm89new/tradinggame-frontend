@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/TradingGame/.vs
+/TradingGame/bin/Debug
+/TradingGame/obj/Debug/net9.0-android/android/assets/arm64-v8a/ar/Microsoft.Maui.Controls.resources.dll
+/TradingGame/obj
+/TradingGame/obj/Debug/net9.0-android/android/assets/arm64-v8a/ca/Microsoft.Maui.Controls.resources.dll
