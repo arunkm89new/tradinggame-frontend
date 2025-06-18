@@ -1,8 +1,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.Intrinsics.X86;
+using TradingGame.Models;
 
-namespace TradingGame
+namespace TradingGame.ViewModels
 {
     public class TradePageViewModel : INotifyPropertyChanged
     {
@@ -17,9 +18,17 @@ namespace TradingGame
                 {
                     _selectedStock = value;
                     OnPropertyChanged(nameof(SelectedStock));
+                    
+                    // Update the stock in the trade popup
+                    if (TradePopupVM != null && _selectedStock != null)
+                    {
+                        TradePopupVM.Stock = _selectedStock;
+                    }
                 }
             }
         }
+
+        public TradePopupViewModel TradePopupVM { get; private set; }
 
         public TradePageViewModel()
         {
@@ -27,10 +36,9 @@ namespace TradingGame
             {
                 new StockModel { Name = "Bitcoin", Symbol = "BINANCE:BTCUSDT" },
                 new StockModel { Name = "Ethereum", Symbol = "BINANCE:ETHUSDT" }
-                
-
-
             };
+            
+            TradePopupVM = new TradePopupViewModel();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -28,6 +28,18 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <!-- Trading colors -->
+    <Color x:Key="TradingBackground">#F9F9F9</Color>
+    <Color x:Key="TradingHeaderBackground">#FFFFFF</Color>
+    <Color x:Key="TradingChartBackground">#FFFFFF</Color>
+    <Color x:Key="TradingPriceGreen">#4CAF50</Color>
+    <Color x:Key="TradingPriceRed">#F44336</Color>
+    <Color x:Key="TradingBuyButton">#4CAF50</Color>
+    <Color x:Key="TradingSellButton">#F44336</Color>
+    <Color x:Key="TradingCardBackground">#FFFFFF</Color>
+    <Color x:Key="TradingCardShadow">#20000000</Color>
+    <Color x:Key="TradingTimerBackground">#333333</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
@@ -42,4 +54,10 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+    
+    <!-- Trading brushes -->
+    <SolidColorBrush x:Key="TradingBuyButtonBrush" Color="{StaticResource TradingBuyButton}"/>
+    <SolidColorBrush x:Key="TradingSellButtonBrush" Color="{StaticResource TradingSellButton}"/>
+    <SolidColorBrush x:Key="TradingPriceGreenBrush" Color="{StaticResource TradingPriceGreen}"/>
+    <SolidColorBrush x:Key="TradingPriceRedBrush" Color="{StaticResource TradingPriceRed}"/>
 </ResourceDictionary>

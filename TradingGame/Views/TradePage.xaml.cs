@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using System.Timers;
+using TradingGame.ViewModels;
+using TradingGame.Models;
 
 namespace TradingGame
 {
@@ -11,6 +13,7 @@ namespace TradingGame
         private System.Timers.Timer _ltpTimer;
         private string _currentSymbol;
         private static readonly HttpClient _httpClient = new HttpClient();
+        private string _currentPrice = "$0.00";
 
         public TradePage()
         {
@@ -115,7 +118,27 @@ namespace TradingGame
 </html>";
             TradingViewWebView.Source = null; // Force reload
             TradingViewWebView.Source = new HtmlWebViewSource { Html = html };
-            PriceLabel.Text = $"Selected: {stock.Name} ({stock.Symbol})";
+            UpdatePriceHeader(stock);
+        }
+
+        private void UpdatePriceHeader(StockModel stock)
+        {
+            // Set the currency/stock name header
+            string assetName = stock.Name;
+            string currencySymbol = stock.Symbol.Split(':').Length > 1 ? stock.Symbol.Split(':')[1] : stock.Symbol;
+            
+            if (currencySymbol.StartsWith("BTC"))
+            {
+                CurrencyLabel.Text = $"1 BTC = $105,473.17";
+            }
+            else if (currencySymbol.StartsWith("ETH"))
+            {
+                CurrencyLabel.Text = $"1 ETH = $3,125.92";
+            }
+            else
+            {
+                CurrencyLabel.Text = $"{assetName}";
+            }
         }
 
         private void StartLtpUpdates(string symbol)
@@ -148,45 +171,123 @@ namespace TradingGame
                 string apiSymbol = symbol.Replace("BINANCE:", "");
                 string url = $"https://api.binance.com/api/v3/ticker/price?symbol={apiSymbol}";
                 var response = await _httpClient.GetAsync(url);
+                
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     var price = System.Text.Json.JsonDocument.Parse(json).RootElement.GetProperty("price").GetString();
+                    
+                    // Also try to get 24h change
+                    url = $"https://api.binance.com/api/v3/ticker/24hr?symbol={apiSymbol}";
+                    response = await _httpClient.GetAsync(url);
+                    
+                    string priceChangePercent = "0.00";
+                    string priceChange = "0.00";
+                    
+                    if (response.IsSuccessStatusCode)
+                    {
+                        json = await response.Content.ReadAsStringAsync();
+                        var jsonDoc = System.Text.Json.JsonDocument.Parse(json);
+                        priceChangePercent = jsonDoc.RootElement.GetProperty("priceChangePercent").GetString();
+                        priceChange = jsonDoc.RootElement.GetProperty("priceChange").GetString();
+                    }
+                    
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        PriceLabel.Text = $"LTP: {price} USD";
+                        // Format to match the mockup style
+                        double priceChangeValue = double.Parse(priceChange);
+                        double percentValue = double.Parse(priceChangePercent);
+                        double currentPrice = double.Parse(price);
+                        
+                        // Format the price with commas for thousands
+                        string formattedPrice = $"{currentPrice:N2}";
+                        _currentPrice = $"$ {formattedPrice}";
+                        
+                        // Update the TradePopup price if it's open
+                        if (BindingContext is TradePageViewModel vm)
+                        {
+                            vm.TradePopupVM.CurrentPrice = _currentPrice;
+                        }
+                        
+                        // Update the CurrencyLabel with the real-time price
+                        if (apiSymbol.StartsWith("BTC"))
+                        {
+                            CurrencyLabel.Text = $"1 BTC = ${formattedPrice}";
+                        }
+                        else if (apiSymbol.StartsWith("ETH"))
+                        {
+                            CurrencyLabel.Text = $"1 ETH = ${formattedPrice}";
+                        }
+                        else
+                        {
+                            CurrencyLabel.Text = $"{apiSymbol} = ${formattedPrice}";
+                        }
+                        
+                        string priceChangeText = $"Today {(priceChangeValue >= 0 ? "+" : "")}{priceChange} ({(percentValue >= 0 ? "+" : "")}{priceChangePercent}%)";
+                        PriceLabel.Text = priceChangeText;
+                        
+                        // Set color based on price change
+                        PriceLabel.TextColor = percentValue >= 0 ? 
+                            (Color)Application.Current.Resources["TradingPriceGreen"] : 
+                            (Color)Application.Current.Resources["TradingPriceRed"];
                     });
                 }
                 else
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        PriceLabel.Text = "LTP: N/A";
+                        PriceLabel.Text = "Today's change not available";
                     });
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    PriceLabel.Text = "LTP: N/A";
+                    PriceLabel.Text = "Price data unavailable";
                 });
             }
         }
 
         private void OnBuyClicked(object sender, EventArgs e)
         {
-            // TODO: Show trade popup for Buy
+            // Show trade popup for Buy
+            if (BindingContext is TradePageViewModel vm)
+            {
+                vm.TradePopupVM.TradeType = "BUY";
+                vm.TradePopupVM.Stock = vm.SelectedStock;
+                vm.TradePopupVM.CurrentPrice = _currentPrice;
+                vm.TradePopupVM.IsVisible = true;
+                
+                // Default selections
+                vm.TradePopupVM.SelectedTradeSize = "$1500"; // As shown in mockup
+                vm.TradePopupVM.SelectedLeverage = "30x";    // As shown in mockup
+            }
         }
 
         private void OnSellClicked(object sender, EventArgs e)
         {
-            // TODO: Show trade popup for Sell
+            // Show trade popup for Sell
+            if (BindingContext is TradePageViewModel vm)
+            {
+                vm.TradePopupVM.TradeType = "SELL";
+                vm.TradePopupVM.Stock = vm.SelectedStock;
+                vm.TradePopupVM.CurrentPrice = _currentPrice;
+                vm.TradePopupVM.IsVisible = true;
+                
+                // Default selections
+                vm.TradePopupVM.SelectedTradeSize = "$1500"; // As shown in mockup
+                vm.TradePopupVM.SelectedLeverage = "30x";    // As shown in mockup
+            }
         }
 
         private void OnCloseTradeClicked(object sender, EventArgs e)
         {
-            // TODO: Close the trade
+            // Close the trade
+            if (BindingContext is TradePageViewModel vm)
+            {
+                vm.TradePopupVM.IsVisible = false;
+            }
         }
     }
 }
