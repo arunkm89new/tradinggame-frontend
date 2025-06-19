@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.Intrinsics.X86;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
 using TradingGame.Models;
 
 namespace TradingGame.ViewModels
@@ -28,6 +29,7 @@ namespace TradingGame.ViewModels
             }
         }
 
+        public ICommand SelectStockCommand { get; private set; }
         public TradePopupViewModel TradePopupVM { get; private set; }
 
         public TradePageViewModel()
@@ -39,6 +41,15 @@ namespace TradingGame.ViewModels
             };
             
             TradePopupVM = new TradePopupViewModel();
+            
+            // Command to handle stock selection from tap gesture
+            SelectStockCommand = new Command<StockModel>(stock => 
+            {
+                if (stock != null)
+                {
+                    SelectedStock = stock;
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

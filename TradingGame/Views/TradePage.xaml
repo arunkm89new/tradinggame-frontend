@@ -69,32 +69,88 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid WidthRequest="100" Padding="8,0">
-                            <Frame CornerRadius="50" Padding="0" HasShadow="True"
-                                  BorderColor="Transparent" BackgroundColor="White"
-                                  HeightRequest="80" WidthRequest="80"
-                                  HorizontalOptions="Center" VerticalOptions="Start">
-                                <!-- Stock symbol/logo -->
-                                <Grid>
-                                    <Ellipse Stroke="LightGray" StrokeThickness="2" 
-                                            Fill="{OnPlatform iOS=White, Default=Transparent}" 
-                                            WidthRequest="70" HeightRequest="70"/>
-                                    
-                                    <!-- Replace the text label with an icon image -->
-                                    <Image Source="{Binding IconPath}"
-                                           HeightRequest="50" WidthRequest="50"
-                                           HorizontalOptions="Center" VerticalOptions="Center"
-                                           Aspect="AspectFit" />
+                        <Grid WidthRequest="110" HeightRequest="140" Padding="5,0" x:Name="StockItemGrid">
+                            <!-- Add TapGestureRecognizer to make the entire item tappable -->
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.SelectStockCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            
+                            <!-- Main Background - Black rounded rectangle -->
+                            <Frame BackgroundColor="#1A1A1A"
+                                   CornerRadius="10"
+                                   IsClippedToBounds="True"
+                                   BorderColor="Transparent"
+                                   Padding="0"
+                                   HeightRequest="140"
+                                   WidthRequest="100"
+                                   InputTransparent="True">
+                                <!-- Frame background trigger for selection -->
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding Source={x:Reference StockListView}, Path=SelectedItem}"
+                                                 Value="{Binding .}">
+                                        <Setter Property="BackgroundColor" Value="#F79009" />
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                
+                                <Grid InputTransparent="True">
+                                    <!-- Icon Circle -->
+                                    <StackLayout VerticalOptions="Center" 
+                                                 Spacing="5" 
+                                                 InputTransparent="True">
+                                        <Frame CornerRadius="40" 
+                                               HeightRequest="80" 
+                                               WidthRequest="80" 
+                                               Padding="0"
+                                               BackgroundColor="White"
+                                               BorderColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               Margin="0,10,0,0"
+                                               HasShadow="False"
+                                               InputTransparent="True">
+                                            <Grid InputTransparent="True">
+                                                <!-- Circle border that changes color when selected -->
+                                                <Ellipse Stroke="White" 
+                                                         StrokeThickness="2" 
+                                                         Fill="Transparent"
+                                                         WidthRequest="76" 
+                                                         HeightRequest="76"
+                                                         InputTransparent="True">
+                                                    <Ellipse.Triggers>
+                                                        <DataTrigger TargetType="Ellipse"
+                                                                     Binding="{Binding Source={x:Reference StockListView}, Path=SelectedItem}"
+                                                                     Value="{Binding .}">
+                                                            <Setter Property="Stroke" Value="#4285F4" />
+                                                            <Setter Property="StrokeThickness" Value="3" />
+                                                        </DataTrigger>
+                                                    </Ellipse.Triggers>
+                                                </Ellipse>
+
+                                                <!-- Icon Image -->
+                                                <Image Source="{Binding IconPath}"
+                                                       HeightRequest="50" 
+                                                       WidthRequest="50"
+                                                       HorizontalOptions="Center" 
+                                                       VerticalOptions="Center"
+                                                       Aspect="AspectFit"
+                                                       InputTransparent="True" />
+                                            </Grid>
+                                        </Frame>
+                                        
+                                        <!-- Name Label -->
+                                        <Label Text="{Binding Name}" 
+                                               FontAttributes="Bold" 
+                                               FontSize="16"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               Margin="0,5,0,0"
+                                               InputTransparent="True"/>
+                                    </StackLayout>
                                 </Grid>
                             </Frame>
-                            
-                            <VerticalStackLayout Spacing="4" VerticalOptions="End">
-                                <Label Text="{Binding Name}" 
-                                      HorizontalOptions="Center"
-                                      FontAttributes="Bold" FontSize="14"/>
-                                      
-                               
-                            </VerticalStackLayout>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

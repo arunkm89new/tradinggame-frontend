@@ -61,38 +61,7 @@
                      Command="{Binding RefreshCommand}">
             <ScrollView>
                 <VerticalStackLayout>
-                    <!-- Header with back button -->
-                    <Grid ColumnDefinitions="Auto,*" Padding="15,10">
-                        <Button Grid.Column="0"
-                                Command="{Binding BackCommand}" 
-                                Text="←"
-                                FontSize="20"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource Black}"
-                                WidthRequest="40"
-                                HeightRequest="40"
-                                Padding="0"
-                                HorizontalOptions="Start" />
-                                
-                        <!-- PRO label in top right -->
-                        <Frame Grid.Column="1"
-                               BackgroundColor="#3F51B5"
-                               CornerRadius="15"
-                               Padding="8,4"
-                               WidthRequest="50"
-                               HeightRequest="30"
-                               HorizontalOptions="End"
-                               VerticalOptions="Center"
-                               Margin="0,0,15,0"
-                               HasShadow="False">
-                            <Label Text="PRO"
-                                   TextColor="White"
-                                   FontAttributes="Bold"
-                                   FontSize="14"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Frame>
-                    </Grid>
+                  
                     
                     <!-- Profile Information -->
                     <Grid RowDefinitions="Auto,Auto,Auto" 
@@ -115,29 +84,14 @@
                                     <Ellipse Fill="#D81B60" 
                                              WidthRequest="100"
                                              HeightRequest="100" />
-                                    <Label Text="K"
+                                    <Label Text="G"
                                            TextColor="White"
                                            FontSize="48"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"
                                            FontAttributes="Bold" />
                                     
-                                    <!-- Camera icon for photo update -->
-                                    <Frame CornerRadius="15"
-                                           BackgroundColor="#333333"
-                                           WidthRequest="30"
-                                           HeightRequest="30"
-                                           Padding="0"
-                                           HasShadow="False"
-                                           HorizontalOptions="End"
-                                           VerticalOptions="End"
-                                           Margin="0,0,5,5">
-                                        <Label Text="📷"
-                                               TextColor="White"
-                                               FontSize="16"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Frame>
+                                    
                                 </Grid>
                             </Frame>
                             
@@ -146,10 +100,10 @@
                                    FontAttributes="Bold"
                                    HorizontalOptions="Center" />
                             
-                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                            <!--<HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
                                 <Label Text="📍" FontSize="18" />
                                 <Label Text="{Binding Location}" FontSize="18" />
-                            </HorizontalStackLayout>
+                            </HorizontalStackLayout>-->
                             
                         </VerticalStackLayout>
                         

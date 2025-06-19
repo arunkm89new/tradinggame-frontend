@@ -13,11 +13,11 @@ namespace TradingGame.ViewModels
     public class ProfileViewModel : INotifyPropertyChanged
     {
         private readonly TradeService _tradeService;
-        private string _userName = "Kumar mani";
+        private string _userName = "Guest User";
         private string _location = "India";
-        private string _portfolioValue = "$9,855";
-        private string _returnPercentage = "-1.45%";
-        private string _totalTrades = "15";
+        private string _portfolioValue = "$0";
+        private string _returnPercentage = "0%";
+        private string _totalTrades = "0";
         private bool _isLoading = true;
         private string _photoUrl = "profile_photo.png";
 
