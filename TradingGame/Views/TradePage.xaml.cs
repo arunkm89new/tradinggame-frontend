@@ -281,12 +281,20 @@ namespace TradingGame
             }
         }
 
-        private void OnCloseTradeClicked(object sender, EventArgs e)
+        private async void OnCloseTradeClicked(object sender, EventArgs e)
         {
-            // Close the trade
+            // Close the previous order for the selected symbol, using the opposite trade type
             if (BindingContext is TradePageViewModel vm)
             {
-                vm.TradePopupVM.IsVisible = false;
+                var tradeVM = vm.TradePopupVM;
+                if (tradeVM.IsTradeOpen && tradeVM.Stock != null)
+                {
+                    tradeVM.CurrentPrice = _currentPrice;
+                    if (tradeVM.CloseTradeCommand.CanExecute(null))
+                    {
+                        tradeVM.CloseTradeCommand.Execute(null);
+                    }
+                }
             }
         }
     }

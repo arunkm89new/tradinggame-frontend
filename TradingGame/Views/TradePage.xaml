@@ -38,6 +38,7 @@
             <converters:MultiValueEqualityToStyleConverter x:Key="TradeSizeMultiValueStyleConverter" StyleKey1="TradeSizeButtonStyle" StyleKey2="SelectedTradeSizeButtonStyle" />
             <converters:MultiValueEqualityToStyleConverter x:Key="LeverageMultiValueStyleConverter" StyleKey1="LeverageButtonStyle" StyleKey2="SelectedLeverageButtonStyle" />
             <converters:MultiValueEqualityToBoolConverter x:Key="MultiValueEqualityToBoolConverter" />
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -108,14 +109,21 @@
                     <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
                         <Label x:Name="CurrencyLabel" FontSize="22" FontAttributes="Bold" 
                               Text="1 BTC = $105,473.17"/>
-                      
                     </Grid>
                     
+                    <!-- Show ProfitLossText if trade is open, else show PriceLabel -->
                     <Label x:Name="PriceLabel" 
                            Grid.Row="1" 
                            Text="Today +253.137 (0.24%)" 
                            TextColor="{StaticResource TradingPriceGreen}"
-                           FontSize="16"/>
+                           FontSize="16"
+                           IsVisible="{Binding TradePopupVM.IsTradeOpen, Converter={StaticResource InverseBoolConverter}}"/>
+                    <Label x:Name="ProfitLossLabel"
+                           Grid.Row="1"
+                           Text="{Binding TradePopupVM.ProfitLossText}"
+                           TextColor="{StaticResource TradingPriceGreen}"
+                           FontSize="16"
+                           IsVisible="{Binding TradePopupVM.IsTradeOpen}"/>
                 </Grid>
                 
                 <!-- Trading Chart -->
@@ -132,8 +140,20 @@
         
         <!-- Buy/Sell and Navigation Buttons -->
         <Grid Grid.Row="2" RowDefinitions="Auto, Auto" Margin="15,10,15,10">
-            <!-- Buy/Sell Buttons -->
+            <!-- Show Close Trade Button if trade is open, else show Buy/Sell -->
             <Grid Grid.Row="0" ColumnDefinitions="*,*,Auto">
+                <!-- Close Trade Button -->
+                <Button Grid.ColumnSpan="2"
+                        Text="CLOSE ORDER"
+                        TextColor="White"
+                        BackgroundColor="#FF4136"
+                        CornerRadius="10"
+                        HeightRequest="60"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        Margin="0,0,0,0"
+                        Clicked="OnCloseTradeClicked"
+                        IsVisible="{Binding TradePopupVM.IsTradeOpen}"/>
                 <!-- Sell Button -->
                 <Button Grid.Column="0"
                         Text="SELL"
@@ -144,7 +164,8 @@
                         FontSize="20"
                         FontAttributes="Bold"
                         Margin="0,0,5,0"
-                        Clicked="OnSellClicked">
+                        Clicked="OnSellClicked"
+                        IsVisible="{Binding TradePopupVM.IsTradeOpen, Converter={StaticResource InverseBoolConverter}}">
                     <Button.ImageSource>
                         <FontImageSource Glyph="↓" 
                                         FontFamily="Arial"
@@ -152,7 +173,6 @@
                                         Color="White"/>
                     </Button.ImageSource>
                 </Button>
-                
                 <!-- Buy Button -->
                 <Button Grid.Column="1"
                         Text="BUY"
@@ -163,7 +183,8 @@
                         FontSize="20"
                         FontAttributes="Bold"
                         Margin="5,0,0,0"
-                        Clicked="OnBuyClicked">
+                        Clicked="OnBuyClicked"
+                        IsVisible="{Binding TradePopupVM.IsTradeOpen, Converter={StaticResource InverseBoolConverter}}">
                     <Button.ImageSource>
                         <FontImageSource Glyph="↑" 
                                         FontFamily="Arial"
@@ -171,9 +192,7 @@
                                         Color="White"/>
                     </Button.ImageSource>
                 </Button>
-               
             </Grid>
-            
         </Grid>
         
         <!-- Trade Popup -->
@@ -313,5 +332,102 @@
                 </Grid>
             </Frame>
         </Grid>
+        
+        <!-- Trade Summary Popup -->
+        <Grid x:Name="TradeSummaryPopup"
+              IsVisible="{Binding TradePopupVM.IsTradeSummaryVisible}"
+              BackgroundColor="#80000000"
+              InputTransparent="False"
+              Grid.RowSpan="3"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand">
+            <Frame BackgroundColor="White"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   CornerRadius="20"
+                   Padding="30"
+                   HasShadow="True"
+                   WidthRequest="340"
+                   MinimumHeightRequest="400">
+                <StackLayout Spacing="18" HorizontalOptions="Center">
+                    <Label Text="{Binding TradePopupVM.TradeSummary.HeaderText}" 
+                           FontSize="22" FontAttributes="Bold" 
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TradePopupVM.TradeSummary.AssetName}" 
+                           FontSize="18" FontAttributes="Bold" 
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TradePopupVM.TradeSummary.TradeType}" 
+                           FontSize="16" HorizontalOptions="Center"/>
+                    <Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Trade Size: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.TradeSizeDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Leverage: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.LeverageDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Entry: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.EntryPriceDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Exit: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.ExitPriceDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Duration: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.Duration}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <!--<Label FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Commission: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.CommissionDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>-->
+                    <Label FontSize="18" FontAttributes="Bold" 
+                           TextColor="{Binding TradePopupVM.TradeSummary.ProfitLossColor}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="P/L: "/>
+                                <Span Text="{Binding TradePopupVM.TradeSummary.ProfitLossDisplay}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Button Text="OK"
+                            Command="{Binding TradePopupVM.OkCommand}"
+                            BackgroundColor="#4285F4"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Margin="0,20,0,0"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+        <!-- End Trade Summary Popup -->
     </Grid>
 </ContentPage>
