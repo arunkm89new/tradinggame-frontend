@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TradingGame.ProfilePage"
+             xmlns:vm="clr-namespace:TradingGame.ViewModels"
+             xmlns:converters="clr-namespace:TradingGame.Converters"
+             BackgroundColor="{StaticResource TradingBackground}"
+             Title="Your Profile">
+    
+    <ContentPage.BindingContext>
+        <vm:ProfileViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="StatLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            
+            <Style x:Key="StatValueStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+            
+            <Style x:Key="TradeItemStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="0,0,0,15" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BorderColor" Value="Transparent" />
+            </Style>
+            
+            <Style x:Key="HeaderLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="15,15,15,10" />
+            </Style>
+            
+            <!-- Converters for the profile page -->
+            <converters:PnLConverter x:Key="PnLConverter" />
+            <converters:PnLPercentConverter x:Key="PnLPercentConverter" />
+            <converters:PnLColorConverter x:Key="PnLColorConverter" />
+            <converters:TradeTypeColorConverter x:Key="TradeTypeColorConverter" />
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid>
+        <!-- Loading Indicator -->
+        <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}" />
+        
+        <RefreshView IsRefreshing="{Binding IsLoading}"
+                     Command="{Binding RefreshCommand}">
+            <ScrollView>
+                <VerticalStackLayout>
+                    <!-- Header with back button -->
+                    <Grid ColumnDefinitions="Auto,*" Padding="15,10">
+                        <Button Grid.Column="0"
+                                Command="{Binding BackCommand}" 
+                                Text="←"
+                                FontSize="20"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Black}"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                Padding="0"
+                                HorizontalOptions="Start" />
+                                
+                        <!-- PRO label in top right -->
+                        <Frame Grid.Column="1"
+                               BackgroundColor="#3F51B5"
+                               CornerRadius="15"
+                               Padding="8,4"
+                               WidthRequest="50"
+                               HeightRequest="30"
+                               HorizontalOptions="End"
+                               VerticalOptions="Center"
+                               Margin="0,0,15,0"
+                               HasShadow="False">
+                            <Label Text="PRO"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   FontSize="14"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Frame>
+                    </Grid>
+                    
+                    <!-- Profile Information -->
+                    <Grid RowDefinitions="Auto,Auto,Auto" 
+                          BackgroundColor="White"
+                          Margin="0,0,0,15">
+                        
+                        <!-- Profile Photo -->
+                        <VerticalStackLayout Grid.Row="0" Spacing="5"
+                                            HorizontalOptions="Center"
+                                            Padding="20,20,20,10">
+                            <Frame CornerRadius="100"
+                                   HeightRequest="100"
+                                   WidthRequest="100"
+                                   IsClippedToBounds="True"
+                                   HasShadow="False"
+                                   Padding="0"
+                                   BorderColor="Transparent"
+                                   HorizontalOptions="Center">
+                                <Grid>
+                                    <Ellipse Fill="#D81B60" 
+                                             WidthRequest="100"
+                                             HeightRequest="100" />
+                                    <Label Text="K"
+                                           TextColor="White"
+                                           FontSize="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontAttributes="Bold" />
+                                    
+                                    <!-- Camera icon for photo update -->
+                                    <Frame CornerRadius="15"
+                                           BackgroundColor="#333333"
+                                           WidthRequest="30"
+                                           HeightRequest="30"
+                                           Padding="0"
+                                           HasShadow="False"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="End"
+                                           Margin="0,0,5,5">
+                                        <Label Text="📷"
+                                               TextColor="White"
+                                               FontSize="16"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Frame>
+                                </Grid>
+                            </Frame>
+                            
+                            <Label Text="{Binding UserName}"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                                <Label Text="📍" FontSize="18" />
+                                <Label Text="{Binding Location}" FontSize="18" />
+                            </HorizontalStackLayout>
+                            
+                        </VerticalStackLayout>
+                        
+                        <!-- Portfolio Statistics -->
+                        <Frame Grid.Row="1"
+                               Margin="15,0,15,15"
+                               BorderColor="Transparent"
+                               BackgroundColor="#f0f9ff"
+                               CornerRadius="15"
+                               HasShadow="False"
+                               Padding="15">
+                            <Grid ColumnDefinitions="*,*,*">
+                                <!-- Portfolio Value -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Portfolio"
+                                           Style="{StaticResource StatLabelStyle}" />
+                                    <Label Text="{Binding PortfolioValue}"
+                                           Style="{StaticResource StatValueStyle}" />
+                                    <Label Text="💼" 
+                                           FontSize="24"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                                
+                                <!-- Return Percentage -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Return"
+                                           Style="{StaticResource StatLabelStyle}" />
+                                    <Label Text="{Binding ReturnPercentage}"
+                                           Style="{StaticResource StatValueStyle}"
+                                           TextColor="{Binding IsReturnNegative, Converter={StaticResource BoolToColorConverter}, ConverterParameter='TradingPriceRed,TradingPriceGreen'}" />
+                                    <Label Text="📈" 
+                                           FontSize="24"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                                
+                                <!-- Trades -->
+                                <VerticalStackLayout Grid.Column="2" Spacing="5">
+                                    <Label Text="Trades"
+                                           Style="{StaticResource StatLabelStyle}" />
+                                    <Label Text="{Binding TotalTrades}"
+                                           Style="{StaticResource StatValueStyle}" />
+                                    <Label Text="🔄" 
+                                           FontSize="24"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                    
+                    <!-- Closed Trades Section -->
+                    <Label Text="{Binding ClosedTrades.Count, StringFormat='Closed Trades ({0})'}"
+                           Style="{StaticResource HeaderLabelStyle}" />
+                    
+                    <CollectionView ItemsSource="{Binding ClosedTrades}"
+                                    Margin="15,0,15,15"
+                                    EmptyView="No closed trades yet">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Style="{StaticResource TradeItemStyle}">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Date -->
+                                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Text="{Binding CloseTime, StringFormat='{0:MMMM dd, yyyy}'}"
+                                               FontSize="18"
+                                               FontAttributes="Bold" />
+                                        
+                                        <!-- P/L Value -->
+                                        <Label Grid.Row="0" Grid.Column="2"
+                                               HorizontalOptions="End"
+                                               FontAttributes="Bold"
+                                               FontSize="16"
+                                               Text="{Binding PnLValue, StringFormat='${0:F2}'}"
+                                               TextColor="{Binding PnLColor}" />
+                                        
+                                        <!-- Coin Icon -->
+                                        <Frame Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
+                                               HeightRequest="40"
+                                               WidthRequest="40"
+                                               CornerRadius="20"
+                                               HasShadow="False"
+                                               Padding="0"
+                                               BackgroundColor="#FFA000"
+                                               VerticalOptions="Center"
+                                               Margin="0,10,10,0">
+                                            <Label Text="₿" 
+                                                   TextColor="White" 
+                                                   FontSize="20" 
+                                                   HorizontalOptions="Center" 
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="Bold" />
+                                        </Frame>
+                                        
+                                        <!-- Trade Type & Symbol -->
+                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
+                                            <Label Text="{Binding TradeType}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{Binding TradeType, Converter={StaticResource TradeTypeColorConverter}}" />
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="16" />
+                                        </HorizontalStackLayout>
+                                        
+                                        <!-- P/L Percentage -->
+                                        <Label Grid.Row="1" Grid.Column="2"
+                                               HorizontalOptions="End"
+                                               FontSize="14"
+                                               Text="{Binding PnLPercent}" 
+                                               TextColor="{Binding PnLColor}" />
+                                        
+                                        <!-- Entry & Exit Price -->
+                                        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                               FontSize="14"
+                                               TextColor="{StaticResource Gray500}"
+                                               Margin="0,5,0,0">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Price: " />
+                                                    <Span Text="{Binding EntryPrice, StringFormat='${0:N2}'}" />
+                                                    <Span Text=" → " />
+                                                    <Span Text="{Binding ExitPrice, StringFormat='${0:N2}'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        
+                                        <!-- Trade Size & Leverage -->
+                                        <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                               FontSize="14"
+                                               TextColor="{StaticResource Gray500}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Amount: " />
+                                                    <Span Text="{Binding TradeSize, StringFormat='${0:N0}'}" />
+                                                    <Span Text=" × " />
+                                                    <Span Text="{Binding Leverage}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

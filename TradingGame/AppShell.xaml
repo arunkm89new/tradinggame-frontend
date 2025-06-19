@@ -15,6 +15,10 @@
             Title="Trade"
             ContentTemplate="{DataTemplate local:TradePage}"
             Route="TradePage" />
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate local:ProfilePage}"
+            Route="ProfilePage" />
     </TabBar>
 
 </Shell>

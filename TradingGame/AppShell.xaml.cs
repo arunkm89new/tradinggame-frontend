@@ -8,6 +8,7 @@ namespace TradingGame
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(TradePage), typeof(TradePage));
+            Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
         }
     }
 }
