@@ -13,6 +13,7 @@ namespace TradingGame.ViewModels
     public class ProfileViewModel : INotifyPropertyChanged
     {
         private readonly TradeService _tradeService;
+        private readonly UserService _userService;
         private string _userName = "Guest User";
         private string _location = "India";
         private string _portfolioValue = "$0";
@@ -124,6 +125,7 @@ namespace TradingGame.ViewModels
         {
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "trades.db3");
             _tradeService = new TradeService(dbPath);
+            _userService = new UserService(dbPath);
             
             RefreshCommand = new Command(async () => await LoadDataAsync());
             BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
@@ -141,7 +143,7 @@ namespace TradingGame.ViewModels
                 var closed = allTrades.Where(t => !t.IsOpen)
                                       .OrderByDescending(t => t.CloseTime ?? DateTime.MinValue)
                                       .ToList();
-                
+                var cash = await _userService.GetCashBalanceAsync();
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     ClosedTrades.Clear();
@@ -149,11 +151,10 @@ namespace TradingGame.ViewModels
                     {
                         ClosedTrades.Add(trade);
                     }
-                    
                     // Update the counts
                     TotalTrades = ClosedTrades.Count.ToString();
-                    
-                    // Calculate total portfolio value (for a real app, this would come from a user service)
+                    PortfolioValue = cash.ToString("C0");
+                    // Calculate total portfolio return percentage
                     if (ClosedTrades.Count > 0)
                     {
                         var totalProfitLoss = ClosedTrades.Sum(t => t.PnLValue);

@@ -26,6 +26,7 @@ namespace TradingGame.ViewModels
         private string _tradeDuration;
         private System.Timers.Timer _durationTimer;
         private TradeModel _openTrade;
+        public TradeModel OpenTrade => _openTrade;
         private readonly TradeService _tradeService;
         private Color _profitLossColor = Colors.Black;
         private bool _isTradeSummaryVisible;

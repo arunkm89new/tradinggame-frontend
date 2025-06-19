@@ -5,6 +5,7 @@ using Microsoft.Maui.Controls;
 using System.Timers;
 using TradingGame.ViewModels;
 using TradingGame.Models;
+using TradingGame.Services;
 
 namespace TradingGame
 {
@@ -14,26 +15,47 @@ namespace TradingGame
         private string _currentSymbol;
         private static readonly HttpClient _httpClient = new HttpClient();
         private string _currentPrice = "$0.00";
+        private readonly UserService _userService;
 
         public TradePage()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "trades.db3");
+                _userService = new UserService(dbPath);
+                // Do not call any async method here!
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[TradePage.ctor] Exception: {ex}");
+                Application.Current.MainPage.DisplayAlert("Error", $"TradePage failed to load: {ex.Message}", "OK");
+            }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            // Set default selection to first stock if not already selected
-            if (BindingContext is TradePageViewModel vm && vm.Stocks.Count > 0)
+            try
             {
-                if (vm.SelectedStock == null)
+                await _userService.InitializeAsync();
+                // Set default selection to first stock if not already selected
+                if (BindingContext is TradePageViewModel vm && vm.Stocks.Count > 0)
                 {
-                    vm.SelectedStock = vm.Stocks[0];
+                    if (vm.SelectedStock == null)
+                    {
+                        vm.SelectedStock = vm.Stocks[0];
+                    }
+                    // Ensure UI selection matches ViewModel
+                    StockListView.SelectedItem = vm.SelectedStock;
+                    LoadChartForStock(vm.SelectedStock);
+                    StartLtpUpdates(vm.SelectedStock.Symbol);
                 }
-                // Ensure UI selection matches ViewModel
-                StockListView.SelectedItem = vm.SelectedStock;
-                LoadChartForStock(vm.SelectedStock);
-                StartLtpUpdates(vm.SelectedStock.Symbol);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[TradePage.OnAppearing] Exception: {ex}");
+                Application.Current.MainPage.DisplayAlert("Error", $"TradePage failed to appear: {ex.Message}", "OK");
             }
         }
 
@@ -292,7 +314,18 @@ namespace TradingGame
                     tradeVM.CurrentPrice = _currentPrice;
                     if (tradeVM.CloseTradeCommand.CanExecute(null))
                     {
+                        // Get P/L before closing
+                        decimal entryPrice = tradeVM.EntryPrice;
+                        decimal exitPrice = decimal.Parse(_currentPrice.Replace("$", "").Replace(",", ""));
+                        decimal tradeSize = tradeVM.OpenTrade?.TradeSize ?? 0;
+                        int leverage = tradeVM.OpenTrade?.Leverage ?? 1;
+                        string tradeType = tradeVM.OpenTrade?.TradeType ?? tradeVM.TradeType;
+                        decimal pnl = (exitPrice - entryPrice) * tradeSize / entryPrice * leverage;
+                        if (tradeType == "SELL") pnl = -pnl;
+
                         tradeVM.CloseTradeCommand.Execute(null);
+                        // Update cash balance in DB
+                        await _userService.UpdateCashBalanceAsync(pnl);
                     }
                 }
             }
