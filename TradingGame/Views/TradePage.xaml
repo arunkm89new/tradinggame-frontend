@@ -284,7 +284,7 @@
             
             <Frame BackgroundColor="White"
                    VerticalOptions="End"
-                   CornerRadius="20"
+                   CornerRadius="0"
                    Margin="0,0,0,-1"
                    Padding="0"
                    HasShadow="True">
@@ -311,7 +311,8 @@
                                FontSize="18"/>
                                
                         <ScrollView Orientation="Horizontal"
-                                   HorizontalScrollBarVisibility="Never">
+                                   HorizontalScrollBarVisibility="Never"
+                                   Padding="0,0,15,0">
                             <CollectionView ItemsSource="{Binding TradePopupVM.TradeSizeChips}"
                                            SelectionMode="None"
                                            HorizontalScrollBarVisibility="Never">
@@ -357,7 +358,8 @@
                                FontSize="18"/>
                                
                         <ScrollView Orientation="Horizontal"
-                                   HorizontalScrollBarVisibility="Never">
+                                   HorizontalScrollBarVisibility="Never"
+                                   Padding="0,0,15,0">
                             <CollectionView ItemsSource="{Binding TradePopupVM.LeverageChips}"
                                            SelectionMode="None"
                                            HorizontalScrollBarVisibility="Never">
