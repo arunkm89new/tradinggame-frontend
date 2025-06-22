@@ -123,9 +123,8 @@ namespace TradingGame.ViewModels
 
         public ProfileViewModel()
         {
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "trades.db3");
-            _tradeService = new TradeService(dbPath);
-            _userService = new UserService(dbPath);
+            _tradeService = new TradeService();
+            _userService = new UserService();
             
             RefreshCommand = new Command(async () => await LoadDataAsync());
             BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));

@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using TradingGame.Models;
+using TradingGame.Services;
+using System.Threading.Tasks;
 
 namespace TradingGame.ViewModels
 {
@@ -10,6 +12,21 @@ namespace TradingGame.ViewModels
     {
         public ObservableCollection<StockModel> Stocks { get; set; }
         private StockModel _selectedStock;
+        private string _cashBalance = "$0.00";
+        
+        public string CashBalance
+        {
+            get => _cashBalance;
+            set
+            {
+                if (_cashBalance != value)
+                {
+                    _cashBalance = value;
+                    OnPropertyChanged(nameof(CashBalance));
+                }
+            }
+        }
+        
         public StockModel SelectedStock
         {
             get => _selectedStock;
@@ -30,6 +47,7 @@ namespace TradingGame.ViewModels
         }
 
         public ICommand SelectStockCommand { get; private set; }
+        public ICommand AddMoneyCommand { get; private set; }
         public TradePopupViewModel TradePopupVM { get; private set; }
 
         public TradePageViewModel()
@@ -50,6 +68,15 @@ namespace TradingGame.ViewModels
                     SelectedStock = stock;
                 }
             });
+            
+            // Command to add virtual money
+            AddMoneyCommand = new Command(async () => await AddVirtualMoney());
+        }
+        
+        private async Task AddVirtualMoney()
+        {
+            // This will be implemented in TradePage.xaml.cs
+            // since we need access to the UserService
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

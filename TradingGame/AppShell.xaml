@@ -8,15 +8,18 @@
 
     <TabBar>
         <ShellContent
-            Title="Home"
+            Title="Learn"
+            Icon="book_icon.png"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
         <ShellContent
             Title="Trade"
+            Icon="candlestick_icon.png"
             ContentTemplate="{DataTemplate local:TradePage}"
             Route="TradePage" />
         <ShellContent
             Title="Profile"
+            Icon="account_icon.png"
             ContentTemplate="{DataTemplate local:ProfilePage}"
             Route="ProfilePage" />
     </TabBar>

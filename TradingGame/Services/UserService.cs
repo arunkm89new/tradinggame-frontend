@@ -5,16 +5,9 @@ using TradingGame.Models;
 
 namespace TradingGame.Services
 {
-    public class UserService
+    public class UserService : BaseSqlLiteService
     {
-        private readonly SQLiteAsyncConnection _db;
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-        public UserService(string dbPath)
-        {
-            _db = new SQLiteAsyncConnection(dbPath);
-            // Do not block on async code in constructor
-        }
 
         public async Task InitializeAsync()
         {

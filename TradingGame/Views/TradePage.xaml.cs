@@ -22,8 +22,7 @@ namespace TradingGame
             try
             {
                 InitializeComponent();
-                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "trades.db3");
-                _userService = new UserService(dbPath);
+                _userService = new UserService();
                 // Do not call any async method here!
             }
             catch (Exception ex)
@@ -39,6 +38,8 @@ namespace TradingGame
             try
             {
                 await _userService.InitializeAsync();
+                await UpdateCashBalanceDisplay();
+                
                 // Set default selection to first stock if not already selected
                 if (BindingContext is TradePageViewModel vm && vm.Stocks.Count > 0)
                 {
@@ -63,6 +64,15 @@ namespace TradingGame
         {
             base.OnDisappearing();
             StopLtpUpdates();
+        }
+        
+        private async Task UpdateCashBalanceDisplay()
+        {
+            if (BindingContext is TradePageViewModel vm)
+            {
+                decimal balance = await _userService.GetCashBalanceAsync();
+                vm.CashBalance = $"$ {balance:N2}";
+            }
         }
 
         private void OnStockSelected(object sender, SelectionChangedEventArgs e)
@@ -326,9 +336,24 @@ namespace TradingGame
                         tradeVM.CloseTradeCommand.Execute(null);
                         // Update cash balance in DB
                         await _userService.UpdateCashBalanceAsync(pnl);
+                        
+                        // Update the displayed balance after closing the trade
+                        await UpdateCashBalanceDisplay();
                     }
                 }
             }
+        }
+        
+        private async void OnAddMoneyClicked(object sender, EventArgs e)
+        {
+            // Add $1000 to the user's balance
+            await _userService.UpdateCashBalanceAsync(1000);
+            
+            // Update the displayed balance
+            await UpdateCashBalanceDisplay();
+            
+            // Show a confirmation message
+            await DisplayAlert("Virtual Money Added", "Successfully added $1,000 to your account!", "OK");
         }
     }
 }

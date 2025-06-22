@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Maui.Storage;
 using SQLite;
 using TradingGame.Models;
 
 namespace TradingGame.Services
 {
-    public class TradeService
+    public class TradeService:BaseSqlLiteService
     {
-        private readonly SQLiteAsyncConnection _db;
-
-        public TradeService(string dbPath)
+        
+        public TradeService()
         {
-            _db = new SQLiteAsyncConnection(dbPath);
             _db.CreateTableAsync<TradeModel>().Wait();
         }
 
@@ -35,6 +35,14 @@ namespace TradingGame.Services
             trade.ExitPrice = exitPrice;
             trade.CloseTime = DateTime.UtcNow;
             return _db.UpdateAsync(trade);
+        }
+        public static void DeleteDatabase()
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFileName);
+            if (File.Exists(dbPath))
+            {
+                File.Delete(dbPath);
+            }
         }
     }
 }

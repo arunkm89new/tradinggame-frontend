@@ -28,9 +28,11 @@ namespace TradingGame.ViewModels
         private TradeModel _openTrade;
         public TradeModel OpenTrade => _openTrade;
         private readonly TradeService _tradeService;
+        private readonly UserService _userService;
         private Color _profitLossColor = Colors.Black;
         private bool _isTradeSummaryVisible;
         private TradeSummaryViewModel _tradeSummary;
+        private string _tradeWarningMessage;
 
         // Trade size options
         public List<string> TradeSizeOptions { get; } = new List<string>
@@ -179,6 +181,12 @@ namespace TradingGame.ViewModels
             }
         }
 
+        public string TradeWarningMessage
+        {
+            get => _tradeWarningMessage;
+            set { _tradeWarningMessage = value; OnPropertyChanged(nameof(TradeWarningMessage)); }
+        }
+
         // Convenience properties for UI
         public bool IsTypeBuy => TradeType == "BUY";
         public bool IsTypeSell => TradeType == "SELL";
@@ -187,7 +195,7 @@ namespace TradingGame.ViewModels
             (Color)Application.Current.Resources["TradingBuyButton"] : 
             (Color)Application.Current.Resources["TradingSellButton"];
 
-        public string OpenTradeButtonText => IsTradeOpen ? "CLOSE TRADE" : $"OPEN TRADE ? {CurrentPrice}";
+        public string OpenTradeButtonText => IsTradeOpen ? "CLOSE TRADE" : $"OPEN TRADE -> {CurrentPrice}";
 
         // Commands
         public ICommand ClosePopupCommand { get; }
@@ -229,8 +237,8 @@ namespace TradingGame.ViewModels
             OkCommand = new Command(() => IsTradeSummaryVisible = false);
             LearnCommand = new Command(ExecuteLearn);
 
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "trades.db3");
-            _tradeService = new TradeService(dbPath);
+            _tradeService = new TradeService();
+            _userService = new UserService();
         }
 
         private void ExecuteLearn()
@@ -260,18 +268,31 @@ namespace TradingGame.ViewModels
         {
             // Extract the numeric value from the trade size (remove $ sign)
             string tradeSizeValue = SelectedTradeSize.Replace("$", "");
-            
+            decimal tradeSize = decimal.Parse(SelectedTradeSize.Replace("$", "").Replace(",", ""));
+            int leverage = int.Parse(SelectedLeverage.Replace("x", ""));
+            decimal requiredMargin = tradeSize * leverage;
+            decimal cashBalance = await _userService.GetCashBalanceAsync();
+            if (cashBalance < requiredMargin)
+            {
+                // Show DisplayAlert instead of setting TradeWarningMessage
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Insufficient Balance",
+                        "Not enough balance. Choose a different Trade Size and Leverage or add virtual money.",
+                        "OK");
+                });
+                return;
+            }
+            TradeWarningMessage = string.Empty;
             // Log the trade details - in a real app, you would send this to a backend
             Console.WriteLine($"Opening {TradeType} trade:");
             Console.WriteLine($"Stock: {Stock?.Symbol} ({Stock?.Name})");
             Console.WriteLine($"Trade Size: {SelectedTradeSize}");
             Console.WriteLine($"Leverage: {SelectedLeverage}");
             Console.WriteLine($"Current Price: {CurrentPrice}");
-            
             // For now we'll just close the popup
             decimal entryPrice = decimal.Parse(CurrentPrice.Replace("$", "").Replace(",", ""));
-            decimal tradeSize = decimal.Parse(SelectedTradeSize.Replace("$", "").Replace(",", ""));
-            int leverage = int.Parse(SelectedLeverage.Replace("x", ""));
             var trade = new TradeModel
             {
                 Symbol = Stock?.Symbol,
