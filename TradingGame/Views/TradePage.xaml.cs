@@ -6,6 +6,7 @@ using System.Timers;
 using TradingGame.ViewModels;
 using TradingGame.Models;
 using TradingGame.Services;
+using System.Linq;
 
 namespace TradingGame
 {
@@ -16,6 +17,7 @@ namespace TradingGame
         private static readonly HttpClient _httpClient = new HttpClient();
         private string _currentPrice = "$0.00";
         private readonly UserService _userService;
+        private readonly TradeService _tradeService = new TradeService();
 
         public TradePage()
         {
@@ -51,6 +53,7 @@ namespace TradingGame
                     StockListView.SelectedItem = vm.SelectedStock;
                     LoadChartForStock(vm.SelectedStock);
                     StartLtpUpdates(vm.SelectedStock.Symbol);
+                    await CheckAndSetOpenTradeForStock(vm.SelectedStock);
                 }
             }
             catch (Exception ex)
@@ -75,12 +78,13 @@ namespace TradingGame
             }
         }
 
-        private void OnStockSelected(object sender, SelectionChangedEventArgs e)
+        private async void OnStockSelected(object sender, SelectionChangedEventArgs e)
         {
             if (e.CurrentSelection.Count > 0 && e.CurrentSelection[0] is StockModel selectedStock)
             {
                 LoadChartForStock(selectedStock);
                 StartLtpUpdates(selectedStock.Symbol);
+                await CheckAndSetOpenTradeForStock(selectedStock);
             }
             else
             {
@@ -286,14 +290,12 @@ namespace TradingGame
             // Show trade popup for Buy
             if (BindingContext is TradePageViewModel vm)
             {
+                // Always reset to default trade size and leverage when opening popup
+                vm.TradePopupVM.SetDefaultTradeSizeAndLeverage();
                 vm.TradePopupVM.TradeType = "BUY";
                 vm.TradePopupVM.Stock = vm.SelectedStock;
                 vm.TradePopupVM.CurrentPrice = _currentPrice;
                 vm.TradePopupVM.IsVisible = true;
-                
-                // Default selections
-                vm.TradePopupVM.SelectedTradeSize = "$1500"; // As shown in mockup
-                vm.TradePopupVM.SelectedLeverage = "30x";    // As shown in mockup
             }
         }
 
@@ -302,14 +304,12 @@ namespace TradingGame
             // Show trade popup for Sell
             if (BindingContext is TradePageViewModel vm)
             {
+                // Always reset to default trade size and leverage when opening popup
+                vm.TradePopupVM.SetDefaultTradeSizeAndLeverage();
                 vm.TradePopupVM.TradeType = "SELL";
                 vm.TradePopupVM.Stock = vm.SelectedStock;
                 vm.TradePopupVM.CurrentPrice = _currentPrice;
                 vm.TradePopupVM.IsVisible = true;
-                
-                // Default selections
-                vm.TradePopupVM.SelectedTradeSize = "$1500"; // As shown in mockup
-                vm.TradePopupVM.SelectedLeverage = "30x";    // As shown in mockup
             }
         }
 
@@ -339,6 +339,8 @@ namespace TradingGame
                         
                         // Update the displayed balance after closing the trade
                         await UpdateCashBalanceDisplay();
+                        // Refresh open trade state for this stock
+                        await CheckAndSetOpenTradeForStock(tradeVM.Stock);
                     }
                 }
             }
@@ -354,6 +356,35 @@ namespace TradingGame
             
             // Show a confirmation message
             await DisplayAlert("Virtual Money Added", "Successfully added $1,000 to your account!", "OK");
+        }
+
+        private async Task CheckAndSetOpenTradeForStock(StockModel stock)
+        {
+            if (BindingContext is TradePageViewModel vm)
+            {
+                var openTrades = await _tradeService.GetOpenTradesAsync();
+                var openTrade = openTrades.FirstOrDefault(t => t.Symbol == stock.Symbol);
+                var tradeVM = vm.TradePopupVM;
+                if (openTrade != null)
+                {
+                    // Set the open trade info for this stock
+                    tradeVM.Stock = stock;
+                    tradeVM.IsTradeOpen = true;
+                    tradeVM.EntryPrice = openTrade.EntryPrice;
+                    tradeVM.TradeType = openTrade.TradeType;
+                    tradeVM.TradeOpenTime = openTrade.OpenTime;
+                    tradeVM.SelectedTradeSize = "$" + openTrade.TradeSize.ToString("N0");
+                    tradeVM.SelectedLeverage = openTrade.Leverage + "x";
+                    tradeVM.OpenTrade = openTrade;
+                    tradeVM.UpdateProfitLossPublic();
+                }
+                else
+                {
+                    // No open trade for this stock
+                    tradeVM.IsTradeOpen = false;
+                    tradeVM.OpenTrade = null;
+                }
+            }
         }
     }
 }

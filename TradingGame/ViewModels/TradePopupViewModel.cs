@@ -26,7 +26,11 @@ namespace TradingGame.ViewModels
         private string _tradeDuration;
         private System.Timers.Timer _durationTimer;
         private TradeModel _openTrade;
-        public TradeModel OpenTrade => _openTrade;
+        public TradeModel OpenTrade
+        {
+            get => _openTrade;
+            set { _openTrade = value; OnPropertyChanged(nameof(OpenTrade)); }
+        }
         private readonly TradeService _tradeService;
         private readonly UserService _userService;
         private Color _profitLossColor = Colors.Black;
@@ -396,6 +400,21 @@ namespace TradingGame.ViewModels
             decimal percent = (pnl / (_openTrade.TradeSize * _openTrade.Leverage)) * 100;
             ProfitLossText = $"P/L: {pnl:F2} ({percent:F2}%)";
             ProfitLossColor = pnl < 0 ? Colors.Red : Colors.Green;
+        }
+        public void UpdateProfitLossPublic() => UpdateProfitLoss();
+
+        public void SetDefaultTradeSizeAndLeverage()
+        {
+            if (TradeSizeOptions.Count > 0)
+            {
+                SelectedTradeSize = TradeSizeOptions[0];
+                foreach (var c in TradeSizeChips) c.IsSelected = c.Value == SelectedTradeSize;
+            }
+            if (LeverageOptions.Count > 0)
+            {
+                SelectedLeverage = LeverageOptions[0];
+                foreach (var c in LeverageChips) c.IsSelected = c.Value == SelectedLeverage;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

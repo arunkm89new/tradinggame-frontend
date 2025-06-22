@@ -41,6 +41,7 @@ namespace TradingGame.ViewModels
                     if (TradePopupVM != null && _selectedStock != null)
                     {
                         TradePopupVM.Stock = _selectedStock;
+                        TradePopupVM.SetDefaultTradeSizeAndLeverage();
                     }
                 }
             }
@@ -59,6 +60,7 @@ namespace TradingGame.ViewModels
             };
             
             TradePopupVM = new TradePopupViewModel();
+            TradePopupVM.SetDefaultTradeSizeAndLeverage();
             
             // Command to handle stock selection from tap gesture
             SelectStockCommand = new Command<StockModel>(stock => 
@@ -66,6 +68,7 @@ namespace TradingGame.ViewModels
                 if (stock != null)
                 {
                     SelectedStock = stock;
+                    TradePopupVM.SetDefaultTradeSizeAndLeverage();
                 }
             });
             
