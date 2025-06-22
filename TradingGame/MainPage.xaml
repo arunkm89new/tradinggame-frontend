@@ -17,11 +17,11 @@
                 Text="Coming soon!"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
-            <Button
+            <!--<Button
      x:Name="CounterBtn"
      Text="delete db" 
      Clicked="OnCounterClicked"
-     HorizontalOptions="Fill" />
+     HorizontalOptions="Fill" />-->
 
         </VerticalStackLayout>
     </ScrollView>
