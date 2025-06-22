@@ -78,22 +78,22 @@
                         VerticalOptions="Center"/>
             </Grid>
             
-            <!-- Stock List -->
+            <!-- Stock List with significantly reduced height and width (around 50% smaller) -->
             <CollectionView x:Name="StockListView" 
                           Grid.Row="1"
                           SelectionMode="Single" 
                           SelectionChanged="OnStockSelected"
                           ItemsSource="{Binding Stocks}" 
                           SelectedItem="{Binding SelectedStock, Mode=TwoWay}"
-                          HeightRequest="150" 
-                          Margin="0,10,0,0"
+                          HeightRequest="60" 
+                          Margin="15,5,15,0"
                           HorizontalScrollBarVisibility="Never">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid WidthRequest="110" HeightRequest="140" Padding="5,0" x:Name="StockItemGrid">
+                        <Grid WidthRequest="55" HeightRequest="55" Padding="2,0" x:Name="StockItemGrid">
                             <!-- Add TapGestureRecognizer to make the entire item tappable -->
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer 
@@ -103,12 +103,12 @@
                             
                             <!-- Main Background - Black rounded rectangle -->
                             <Frame BackgroundColor="#1A1A1A"
-                                   CornerRadius="10"
+                                   CornerRadius="8"
                                    IsClippedToBounds="True"
                                    BorderColor="Transparent"
                                    Padding="0"
-                                   HeightRequest="140"
-                                   WidthRequest="100"
+                                   HeightRequest="55"
+                                   WidthRequest="50"
                                    InputTransparent="True">
                                 <!-- Frame background trigger for selection -->
                                 <Frame.Triggers>
@@ -122,41 +122,41 @@
                                 <Grid InputTransparent="True">
                                     <!-- Icon Circle -->
                                     <StackLayout VerticalOptions="Center" 
-                                                 Spacing="5" 
+                                                 Spacing="2" 
                                                  InputTransparent="True">
-                                        <Frame CornerRadius="40" 
-                                               HeightRequest="80" 
-                                               WidthRequest="80" 
+                                        <Frame CornerRadius="20" 
+                                               HeightRequest="35" 
+                                               WidthRequest="35" 
                                                Padding="0"
                                                BackgroundColor="White"
                                                BorderColor="White"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"
-                                               Margin="0,10,0,0"
+                                               Margin="0,2,0,0"
                                                HasShadow="False"
                                                InputTransparent="True">
                                             <Grid InputTransparent="True">
                                                 <!-- Circle border that changes color when selected -->
                                                 <Ellipse Stroke="White" 
-                                                         StrokeThickness="2" 
+                                                         StrokeThickness="1" 
                                                          Fill="Transparent"
-                                                         WidthRequest="76" 
-                                                         HeightRequest="76"
+                                                         WidthRequest="33" 
+                                                         HeightRequest="33"
                                                          InputTransparent="True">
                                                     <Ellipse.Triggers>
                                                         <DataTrigger TargetType="Ellipse"
                                                                      Binding="{Binding Source={x:Reference StockListView}, Path=SelectedItem}"
                                                                      Value="{Binding .}">
                                                             <Setter Property="Stroke" Value="#4285F4" />
-                                                            <Setter Property="StrokeThickness" Value="3" />
+                                                            <Setter Property="StrokeThickness" Value="2" />
                                                         </DataTrigger>
                                                     </Ellipse.Triggers>
                                                 </Ellipse>
 
                                                 <!-- Icon Image -->
                                                 <Image Source="{Binding IconPath}"
-                                                       HeightRequest="50" 
-                                                       WidthRequest="50"
+                                                       HeightRequest="25" 
+                                                       WidthRequest="25"
                                                        HorizontalOptions="Center" 
                                                        VerticalOptions="Center"
                                                        Aspect="AspectFit"
@@ -167,10 +167,10 @@
                                         <!-- Name Label -->
                                         <Label Text="{Binding Name}" 
                                                FontAttributes="Bold" 
-                                               FontSize="16"
+                                               FontSize="10"
                                                TextColor="White"
                                                HorizontalOptions="Center"
-                                               Margin="0,5,0,0"
+                                               Margin="0,1,0,0"
                                                InputTransparent="True"/>
                                     </StackLayout>
                                 </Grid>
@@ -201,7 +201,7 @@
                     <Label x:Name="ProfitLossLabel"
                            Grid.Row="1"
                            Text="{Binding TradePopupVM.ProfitLossText}"
-                           TextColor="{StaticResource TradingPriceGreen}"
+                           TextColor="{Binding TradePopupVM.ProfitLossColor}"
                            FontSize="16"
                            IsVisible="{Binding TradePopupVM.IsTradeOpen}"/>
                 </Grid>

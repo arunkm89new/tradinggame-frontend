@@ -152,7 +152,7 @@ namespace TradingGame.ViewModels
                     }
                     // Update the counts
                     TotalTrades = ClosedTrades.Count.ToString();
-                    PortfolioValue = cash.ToString("C0");
+                    PortfolioValue = "$" + cash.ToString("N0");
                     // Calculate total portfolio return percentage
                     if (ClosedTrades.Count > 0)
                     {

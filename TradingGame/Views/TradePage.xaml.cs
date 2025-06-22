@@ -230,14 +230,17 @@ namespace TradingGame
                     
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        // Format to match the mockup style
-                        double priceChangeValue = double.Parse(priceChange);
-                        double percentValue = double.Parse(priceChangePercent);
-                        double currentPrice = double.Parse(price);
+                        // Use the sign of the original string for color, not the parsed value
+                        bool isNegative = priceChangePercent.Trim().StartsWith("-") || priceChange.Trim().StartsWith("-");
+                        double priceChangeValue = double.Parse(priceChange.Trim().Replace("+", string.Empty), System.Globalization.CultureInfo.InvariantCulture);
+                        double percentValue = double.Parse(priceChangePercent.Trim().Replace("+", string.Empty), System.Globalization.CultureInfo.InvariantCulture);
+                        if (priceChangePercent.Trim().StartsWith("-")) percentValue = -Math.Abs(percentValue);
+                        if (priceChange.Trim().StartsWith("-")) priceChangeValue = -Math.Abs(priceChangeValue);
+                        double currentPrice = double.Parse(price, System.Globalization.CultureInfo.InvariantCulture);
                         
                         // Format the price with commas for thousands
                         string formattedPrice = $"{currentPrice:N2}";
-                        _currentPrice = $"$ {formattedPrice}";
+                        _currentPrice = "$ " + formattedPrice;
                         
                         // Update the TradePopup price if it's open
                         if (BindingContext is TradePageViewModel vm)
@@ -262,10 +265,11 @@ namespace TradingGame
                         string priceChangeText = $"Today {(priceChangeValue >= 0 ? "+" : "")}{priceChange} ({(percentValue >= 0 ? "+" : "")}{priceChangePercent}%)";
                         PriceLabel.Text = priceChangeText;
                         
-                        // Set color based on price change
-                        PriceLabel.TextColor = percentValue >= 0 ? 
-                            (Color)Application.Current.Resources["TradingPriceGreen"] : 
-                            (Color)Application.Current.Resources["TradingPriceRed"];
+                        // Set color based on sign, not value
+                        PriceLabel.TextColor = isNegative ? 
+                            (Color)Application.Current.Resources["TradingPriceRed"] : 
+                            (Color)Application.Current.Resources["TradingPriceGreen"];
+                        // ProfitLossLabel.TextColor is now handled by ViewModel binding
                     });
                 }
                 else
