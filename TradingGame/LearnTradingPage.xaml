@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TradingGame.LearnTradingPage"
+             Title="Learn Trading in 10 Minutes">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,20,20,20" Spacing="20">
+            <Image Source="trading_intro.png" HeightRequest="180" Aspect="AspectFit" />
+            <Label Text="Learn Trading in 10 Minutes" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="Welcome to your quick start guide to trading! In this course, you'll learn the basics of financial markets, how to place trades, and essential tips for beginners." FontSize="16" />
+            <Frame BackgroundColor="#f5f5f5" CornerRadius="12" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="1. What is Trading?" FontAttributes="Bold" FontSize="18" />
+                    <Label Text="Trading is the act of buying and selling financial instruments like stocks, currencies, or crypto to make a profit." />
+                    <Image Source="trading_chart.png" HeightRequest="120" Aspect="AspectFit" />
+                </VerticalStackLayout>
+            </Frame>
+            <Frame BackgroundColor="#f5f5f5" CornerRadius="12" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="2. Types of Orders" FontAttributes="Bold" FontSize="18" />
+                    <Label Text="Learn about market orders, limit orders, and stop-loss orders. Each helps you control how and when your trades are executed." />
+                    <Image Source="order_types.png" HeightRequest="120" Aspect="AspectFit" />
+                </VerticalStackLayout>
+            </Frame>
+            <Frame BackgroundColor="#f5f5f5" CornerRadius="12" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="3. Analyzing Price Movements" FontAttributes="Bold" FontSize="18" />
+                    <Label Text="Use charts and indicators to understand trends and make informed decisions." />
+                    <Image Source="price_analysis.png" HeightRequest="120" Aspect="AspectFit" />
+                </VerticalStackLayout>
+            </Frame>
+            <Button Text="Back to Courses" Clicked="OnBackClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,28 +1,382 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TradingGame.MainPage">
+             x:Class="TradingGame.MainPage"
+             BackgroundColor="{StaticResource TradingBackground}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CourseCardStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="CornerRadius" Value="15" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="0,0,0,15" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BorderColor" Value="Transparent" />
+            </Style>
+            
+            <Style x:Key="CourseHeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource MidnightBlue}" />
+            </Style>
+            
+            <Style x:Key="CourseTagStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource Secondary}" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="8,3" />
+                <Setter Property="HasShadow" Value="False" />
+            </Style>
+            
+            <Style x:Key="CourseTagTextStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+        <VerticalStackLayout 
+            Padding="20,10">
+            
+            <!-- Header Section -->
             <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
+                Source="course_banner.png"
+                HeightRequest="120"
                 Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a hovercraft number nine" />
+                HorizontalOptions="Center"
+                Margin="0,20,0,10" />
 
             <Label
-                Text="Coming soon!"
+                Text="Learn Trading"
                 Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
-            <!--<Button
-     x:Name="CounterBtn"
-     Text="delete db" 
-     Clicked="OnCounterClicked"
-     HorizontalOptions="Fill" />-->
+                Margin="0,0,0,10" />
+                
+            <Label
+                Text="Master trading skills with our interactive courses"
+                FontSize="16"
+                TextColor="{StaticResource Gray500}"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Margin="20,0,20,20" />
 
+            <!-- Featured Course -->
+            <Frame Style="{StaticResource CourseCardStyle}"
+                   HeightRequest="220">
+                <Grid RowDefinitions="Auto,Auto,*,Auto" ColumnDefinitions="*,Auto">
+                    <!-- Course Tag -->
+                    <Frame Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource CourseTagStyle}"
+                           HorizontalOptions="Start">
+                        <Label Text="FEATURED" 
+                               Style="{StaticResource CourseTagTextStyle}"/>
+                    </Frame>
+                    
+                    <!-- Time -->
+                    <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
+                        <Image Source="dotnet_bot.png" 
+                               WidthRequest="16" 
+                               HeightRequest="16"/>
+                        <Label Text="10 min" 
+                               FontSize="14" 
+                               TextColor="{StaticResource Gray500}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <!-- Course Title -->
+                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           Text="Learn Trading in 10 Minutes"
+                           Style="{StaticResource CourseHeaderStyle}"
+                           Margin="0,10,0,5"/>
+                    
+                    <!-- Course Description -->
+                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                           Text="Master the basics of trading - understand markets, orders, and how to analyze price movements in this quick introduction."
+                           TextColor="{StaticResource Gray600}"
+                           FontSize="14"
+                           LineBreakMode="WordWrap"
+                           Margin="0,0,0,5"
+                           VerticalOptions="FillAndExpand"/>
+                    
+                    <!-- Start Button -->
+                    <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                            Text="Start Learning"
+                            HeightRequest="40"
+                            CornerRadius="20"
+                            HorizontalOptions="Start"
+                            Margin="0,5,0,0"
+                            Clicked="OnStartLearningClicked"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Course Categories Header -->
+            <Label Text="Trading Courses"
+                   Style="{StaticResource SubHeadline}"
+                   Margin="0,20,0,15"/>
+                   
+            <!-- Course Categories -->
+            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="15" RowSpacing="15">
+                <!-- Course 1 -->
+                <Frame Grid.Row="0" Grid.Column="0"
+                       Style="{StaticResource CourseCardStyle}"
+                       HeightRequest="150">
+                    <VerticalStackLayout>
+                        <!-- Top Icon -->
+                        <Frame BackgroundColor="{StaticResource Primary}" 
+                               WidthRequest="40" HeightRequest="40" 
+                               CornerRadius="20" Padding="0"
+                               HorizontalOptions="Start">
+                            <Label Text="📊" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center" 
+                                   FontSize="20"/>
+                        </Frame>
+                        
+                        <!-- Title -->
+                        <Label Text="Technical Analysis"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,5"/>
+                               
+                        <!-- Short Description -->
+                        <Label Text="Chart patterns and indicators" 
+                               FontSize="13" 
+                               TextColor="{StaticResource Gray500}"/>
+                               
+                        <Button Text="Learn More" 
+                                FontSize="12"
+                                HeightRequest="30"
+                                CornerRadius="15" 
+                                Margin="0,10,0,0"
+                                HorizontalOptions="Start"
+                                CommandParameter="Technical Analysis"
+                                Clicked="OnCourseSelected"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Course 2 -->
+                <Frame Grid.Row="0" Grid.Column="1"
+                       Style="{StaticResource CourseCardStyle}"
+                       HeightRequest="150">
+                    <VerticalStackLayout>
+                        <!-- Top Icon -->
+                        <Frame BackgroundColor="{StaticResource TradingPriceGreen}" 
+                               WidthRequest="40" HeightRequest="40" 
+                               CornerRadius="20" Padding="0"
+                               HorizontalOptions="Start">
+                            <Label Text="💰" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center" 
+                                   FontSize="20"/>
+                        </Frame>
+                        
+                        <!-- Title -->
+                        <Label Text="Risk Management"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,5"/>
+                               
+                        <!-- Short Description -->
+                        <Label Text="Protect your capital" 
+                               FontSize="13" 
+                               TextColor="{StaticResource Gray500}"/>
+                               
+                        <Button Text="Learn More" 
+                                FontSize="12"
+                                HeightRequest="30"
+                                CornerRadius="15" 
+                                Margin="0,10,0,0"
+                                HorizontalOptions="Start"
+                                CommandParameter="Risk Management"
+                                Clicked="OnCourseSelected"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Course 3 -->
+                <Frame Grid.Row="1" Grid.Column="0"
+                       Style="{StaticResource CourseCardStyle}"
+                       HeightRequest="150">
+                    <VerticalStackLayout>
+                        <!-- Top Icon -->
+                        <Frame BackgroundColor="{StaticResource TradingSellButton}" 
+                               WidthRequest="40" HeightRequest="40" 
+                               CornerRadius="20" Padding="0"
+                               HorizontalOptions="Start">
+                            <Label Text="🧠" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center" 
+                                   FontSize="20"/>
+                        </Frame>
+                        
+                        <!-- Title -->
+                        <Label Text="Trading Psychology"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,5"/>
+                               
+                        <!-- Short Description -->
+                        <Label Text="Master your emotions" 
+                               FontSize="13" 
+                               TextColor="{StaticResource Gray500}"/>
+                               
+                        <Button Text="Learn More" 
+                                FontSize="12"
+                                HeightRequest="30"
+                                CornerRadius="15" 
+                                Margin="0,10,0,0"
+                                HorizontalOptions="Start"
+                                CommandParameter="Trading Psychology"
+                                Clicked="OnCourseSelected"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <!-- Course 4 -->
+                <Frame Grid.Row="1" Grid.Column="1"
+                       Style="{StaticResource CourseCardStyle}"
+                       HeightRequest="150">
+                    <VerticalStackLayout>
+                        <!-- Top Icon -->
+                        <Frame BackgroundColor="#FFA000" 
+                               WidthRequest="40" HeightRequest="40" 
+                               CornerRadius="20" Padding="0"
+                               HorizontalOptions="Start">
+                            <Label Text="₿" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center" 
+                                   FontSize="20"/>
+                        </Frame>
+                        
+                        <!-- Title -->
+                        <Label Text="Crypto Trading"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,5"/>
+                               
+                        <!-- Short Description -->
+                        <Label Text="Digital assets basics" 
+                               FontSize="13" 
+                               TextColor="{StaticResource Gray500}"/>
+                               
+                        <Button Text="Learn More" 
+                                FontSize="12"
+                                HeightRequest="30"
+                                CornerRadius="15" 
+                                Margin="0,10,0,0"
+                                HorizontalOptions="Start"
+                                CommandParameter="Crypto Trading"
+                                Clicked="OnCourseSelected"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+            
+            <!-- Recent Course -->
+            <Label Text="New This Week"
+                   Style="{StaticResource SubHeadline}"
+                   Margin="0,25,0,15"/>
+                   
+            <Frame Style="{StaticResource CourseCardStyle}">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
+                    <!-- Course Image -->
+                    <Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                           WidthRequest="100" HeightRequest="100"
+                           CornerRadius="15" Padding="0" Margin="0,0,15,0"
+                           BorderColor="Transparent"
+                           IsClippedToBounds="True">
+                        <Image Source="dotnet_bot.png"
+                               Aspect="AspectFill"/>
+                    </Frame>
+                    
+                    <!-- Course Tag -->
+                    <Frame Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource CourseTagStyle}"
+                           BackgroundColor="#ffebee"
+                           HorizontalOptions="Start">
+                        <Label Text="NEW" 
+                               Style="{StaticResource CourseTagTextStyle}"
+                               TextColor="{StaticResource TradingSellButton}"/>
+                    </Frame>
+                    
+                    <!-- Course Title -->
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="Advanced Trading Strategies"
+                           Style="{StaticResource CourseHeaderStyle}"
+                           Margin="0,5,0,5"/>
+                    
+                    <!-- Course Info -->
+                    <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Spacing="15">
+                        <HorizontalStackLayout Spacing="5">
+                            <Image Source="dotnet_bot.png" 
+                                   WidthRequest="16" 
+                                   HeightRequest="16"/>
+                            <Label Text="25 min" 
+                                   FontSize="14" 
+                                   TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Image Source="dotnet_bot.png" 
+                                   WidthRequest="16" 
+                                   HeightRequest="16"/>
+                            <Label Text="Advanced" 
+                                   FontSize="14" 
+                                   TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                    
+                    <!-- Button -->
+                    <Button Grid.Row="3" Grid.Column="1"
+                            Text="Check it out"
+                            HeightRequest="40"
+                            CornerRadius="20"
+                            HorizontalOptions="Start"
+                            Margin="0,10,0,0"
+                            CommandParameter="Advanced Trading Strategies"
+                            Clicked="OnCourseSelected"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Learning Path -->
+            <Label Text="Trading Career Path"
+                   Style="{StaticResource SubHeadline}"
+                   Margin="0,25,0,15"/>
+                   
+            <Frame Style="{StaticResource CourseCardStyle}">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                    <HorizontalStackLayout Grid.Row="0" Spacing="15">
+                        <Label Text="🚀" FontSize="32"/>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="From Beginner to Pro" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"/>
+                            <Label Text="Complete Trading Journey" 
+                                   TextColor="{StaticResource Gray500}"
+                                   FontSize="14"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                    
+                    <ProgressBar Grid.Row="1" 
+                                 Progress="0.25" 
+                                 ProgressColor="{StaticResource Primary}" 
+                                 Margin="0,15,0,5"/>
+                                 
+                    <Label Grid.Row="2" 
+                           Text="25% Complete" 
+                           TextColor="{StaticResource Primary}" 
+                           HorizontalOptions="End"/>
+                           
+                    <Button Grid.Row="3" 
+                            Text="Continue Learning" 
+                            Margin="0,10,0,0"
+                            HorizontalOptions="Start"
+                            CommandParameter="Trading Career Path"
+                            Clicked="OnCourseSelected"/>
+                </Grid>
+            </Frame>
+            
+            <BoxView HeightRequest="20"/>
         </VerticalStackLayout>
     </ScrollView>
 
