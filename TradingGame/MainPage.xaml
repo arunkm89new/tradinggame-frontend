@@ -41,17 +41,25 @@
             Padding="20,10">
             
             <!-- Header Section -->
-            <Image
-                Source="course_banner.png"
-                HeightRequest="120"
-                Aspect="AspectFit"
-                HorizontalOptions="Center"
-                Margin="0,20,0,10" />
+            <Grid RowDefinitions="Auto">
+                <Rectangle Fill="{StaticResource TradingBackground}" 
+                           Grid.Row="0"
+                           HorizontalOptions="Fill" 
+                           VerticalOptions="Fill"/>
+                <Image Source="course_banner.png"
+                       Grid.Row="0"
+                       HeightRequest="160"
+                       Aspect="AspectFill" 
+                       HorizontalOptions="Fill"
+                       Margin="0,15,0,10" />
+            </Grid>
 
             <Label
                 Text="Learn Trading"
                 Style="{StaticResource Headline}"
-                Margin="0,0,0,10" />
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Margin="0,10,0,5" />
                 
             <Label
                 Text="Master trading skills with our interactive courses"
@@ -111,18 +119,18 @@
             </Frame>
             
             <!-- Course Categories Header -->
-            <Label Text="Trading Courses"
+            <!--<Label Text="Trading Courses"
                    Style="{StaticResource SubHeadline}"
-                   Margin="0,20,0,15"/>
+                   Margin="0,20,0,15"/>-->
                    
             <!-- Course Categories -->
-            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="15" RowSpacing="15">
-                <!-- Course 1 -->
+            <!--<Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="15" RowSpacing="15">
+                --><!-- Course 1 --><!--
                 <Frame Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource CourseCardStyle}"
                        HeightRequest="150">
                     <VerticalStackLayout>
-                        <!-- Top Icon -->
+                        --><!-- Top Icon --><!--
                         <Frame BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="40" HeightRequest="40" 
                                CornerRadius="20" Padding="0"
@@ -133,13 +141,13 @@
                                    FontSize="20"/>
                         </Frame>
                         
-                        <!-- Title -->
+                        --><!-- Title --><!--
                         <Label Text="Technical Analysis"
                                FontSize="16"
                                FontAttributes="Bold"
                                Margin="0,10,0,5"/>
                                
-                        <!-- Short Description -->
+                        --><!-- Short Description --><!--
                         <Label Text="Chart patterns and indicators" 
                                FontSize="13" 
                                TextColor="{StaticResource Gray500}"/>
@@ -155,12 +163,12 @@
                     </VerticalStackLayout>
                 </Frame>
                 
-                <!-- Course 2 -->
+                --><!-- Course 2 --><!--
                 <Frame Grid.Row="0" Grid.Column="1"
                        Style="{StaticResource CourseCardStyle}"
                        HeightRequest="150">
                     <VerticalStackLayout>
-                        <!-- Top Icon -->
+                        --><!-- Top Icon --><!--
                         <Frame BackgroundColor="{StaticResource TradingPriceGreen}" 
                                WidthRequest="40" HeightRequest="40" 
                                CornerRadius="20" Padding="0"
@@ -171,13 +179,13 @@
                                    FontSize="20"/>
                         </Frame>
                         
-                        <!-- Title -->
+                        --><!-- Title --><!--
                         <Label Text="Risk Management"
                                FontSize="16"
                                FontAttributes="Bold"
                                Margin="0,10,0,5"/>
                                
-                        <!-- Short Description -->
+                        --><!-- Short Description --><!--
                         <Label Text="Protect your capital" 
                                FontSize="13" 
                                TextColor="{StaticResource Gray500}"/>
@@ -193,12 +201,12 @@
                     </VerticalStackLayout>
                 </Frame>
                 
-                <!-- Course 3 -->
+                --><!-- Course 3 --><!--
                 <Frame Grid.Row="1" Grid.Column="0"
                        Style="{StaticResource CourseCardStyle}"
                        HeightRequest="150">
                     <VerticalStackLayout>
-                        <!-- Top Icon -->
+                        --><!-- Top Icon --><!--
                         <Frame BackgroundColor="{StaticResource TradingSellButton}" 
                                WidthRequest="40" HeightRequest="40" 
                                CornerRadius="20" Padding="0"
@@ -209,13 +217,13 @@
                                    FontSize="20"/>
                         </Frame>
                         
-                        <!-- Title -->
+                        --><!-- Title --><!--
                         <Label Text="Trading Psychology"
                                FontSize="16"
                                FontAttributes="Bold"
                                Margin="0,10,0,5"/>
                                
-                        <!-- Short Description -->
+                        --><!-- Short Description --><!--
                         <Label Text="Master your emotions" 
                                FontSize="13" 
                                TextColor="{StaticResource Gray500}"/>
@@ -231,12 +239,12 @@
                     </VerticalStackLayout>
                 </Frame>
                 
-                <!-- Course 4 -->
+                --><!-- Course 4 --><!--
                 <Frame Grid.Row="1" Grid.Column="1"
                        Style="{StaticResource CourseCardStyle}"
                        HeightRequest="150">
                     <VerticalStackLayout>
-                        <!-- Top Icon -->
+                        --><!-- Top Icon --><!--
                         <Frame BackgroundColor="#FFA000" 
                                WidthRequest="40" HeightRequest="40" 
                                CornerRadius="20" Padding="0"
@@ -248,13 +256,13 @@
                                    FontSize="20"/>
                         </Frame>
                         
-                        <!-- Title -->
+                        --><!-- Title --><!--
                         <Label Text="Crypto Trading"
                                FontSize="16"
                                FontAttributes="Bold"
                                Margin="0,10,0,5"/>
                                
-                        <!-- Short Description -->
+                        --><!-- Short Description --><!--
                         <Label Text="Digital assets basics" 
                                FontSize="13" 
                                TextColor="{StaticResource Gray500}"/>
@@ -269,16 +277,16 @@
                                 Clicked="OnCourseSelected"/>
                     </VerticalStackLayout>
                 </Frame>
-            </Grid>
+            </Grid>-->
             
             <!-- Recent Course -->
-            <Label Text="New This Week"
+            <!--<Label Text="New This Week"
                    Style="{StaticResource SubHeadline}"
-                   Margin="0,25,0,15"/>
+                   Margin="0,25,0,15"/>-->
                    
-            <Frame Style="{StaticResource CourseCardStyle}">
+            <!--<Frame Style="{StaticResource CourseCardStyle}">
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
-                    <!-- Course Image -->
+                    --><!-- Course Image --><!--
                     <Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
                            WidthRequest="100" HeightRequest="100"
                            CornerRadius="15" Padding="0" Margin="0,0,15,0"
@@ -288,7 +296,7 @@
                                Aspect="AspectFill"/>
                     </Frame>
                     
-                    <!-- Course Tag -->
+                    --><!-- Course Tag --><!--
                     <Frame Grid.Row="0" Grid.Column="1"
                            Style="{StaticResource CourseTagStyle}"
                            BackgroundColor="#ffebee"
@@ -298,13 +306,13 @@
                                TextColor="{StaticResource TradingSellButton}"/>
                     </Frame>
                     
-                    <!-- Course Title -->
+                    --><!-- Course Title --><!--
                     <Label Grid.Row="1" Grid.Column="1"
                            Text="Advanced Trading Strategies"
                            Style="{StaticResource CourseHeaderStyle}"
                            Margin="0,5,0,5"/>
                     
-                    <!-- Course Info -->
+                    --><!-- Course Info --><!--
                     <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Spacing="15">
                         <HorizontalStackLayout Spacing="5">
                             <Image Source="dotnet_bot.png" 
@@ -326,7 +334,7 @@
                         </HorizontalStackLayout>
                     </HorizontalStackLayout>
                     
-                    <!-- Button -->
+                    --><!-- Button --><!--
                     <Button Grid.Row="3" Grid.Column="1"
                             Text="Check it out"
                             HeightRequest="40"
@@ -336,10 +344,10 @@
                             CommandParameter="Advanced Trading Strategies"
                             Clicked="OnCourseSelected"/>
                 </Grid>
-            </Frame>
+            </Frame>-->
             
             <!-- Learning Path -->
-            <Label Text="Trading Career Path"
+            <!--<Label Text="Trading Career Path"
                    Style="{StaticResource SubHeadline}"
                    Margin="0,25,0,15"/>
                    
@@ -374,9 +382,8 @@
                             CommandParameter="Trading Career Path"
                             Clicked="OnCourseSelected"/>
                 </Grid>
-            </Frame>
+            </Frame>-->
             
-            <BoxView HeightRequest="20"/>
         </VerticalStackLayout>
     </ScrollView>
 

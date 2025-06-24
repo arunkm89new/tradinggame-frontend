@@ -120,7 +120,7 @@
                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                     <Label Text="Portfolio"
                                            Style="{StaticResource StatLabelStyle}" />
-                                    <Label Text="{Binding PortfolioValue}"
+                                    <Label Text="{Binding PortfolioValue}" TextColor="{StaticResource Gray500}"
                                            Style="{StaticResource StatValueStyle}" />
                                     <Label Text="💼" 
                                            FontSize="24"
@@ -143,7 +143,7 @@
                                 <VerticalStackLayout Grid.Column="2" Spacing="5">
                                     <Label Text="Trades"
                                            Style="{StaticResource StatLabelStyle}" />
-                                    <Label Text="{Binding TotalTrades}"
+                                    <Label Text="{Binding TotalTrades}" TextColor="{StaticResource Gray500}"
                                            Style="{StaticResource StatValueStyle}" />
                                     <Label Text="🔄" 
                                            FontSize="24"
@@ -155,7 +155,7 @@
                     
                     <!-- Closed Trades Section -->
                     <Label Text="{Binding ClosedTrades.Count, StringFormat='Closed Trades ({0})'}"
-                           Style="{StaticResource HeaderLabelStyle}" />
+                           Style="{StaticResource HeaderLabelStyle}" TextColor="Black"/>
                     
                     <CollectionView ItemsSource="{Binding ClosedTrades}"
                                     Margin="15,0,15,15"
@@ -220,10 +220,10 @@
                                                Margin="0,5,0,0">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="Price: " />
-                                                    <Span Text="{Binding EntryPrice, StringFormat='${0:N2}'}" />
-                                                    <Span Text=" → " />
-                                                    <Span Text="{Binding ExitPrice, StringFormat='${0:N2}'}" />
+                                                    <Span Text="Price: " TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text="{Binding EntryPrice, StringFormat='${0:N2}'}" TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text=" → " TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text="{Binding ExitPrice, StringFormat='${0:N2}'}" TextColor="{StaticResource Gray500}"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -234,10 +234,10 @@
                                                TextColor="{StaticResource Gray500}">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="Amount: " />
-                                                    <Span Text="{Binding TradeSize, StringFormat='${0:N0}'}" />
-                                                    <Span Text=" × " />
-                                                    <Span Text="{Binding Leverage}" />
+                                                    <Span Text="Amount: " TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text="{Binding TradeSize, StringFormat='${0:N0}'}" TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text=" × " TextColor="{StaticResource Gray500}"/>
+                                                    <Span Text="{Binding Leverage}" TextColor="{StaticResource Gray500}"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>

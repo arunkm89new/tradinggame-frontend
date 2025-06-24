@@ -102,7 +102,7 @@
                             </Grid.GestureRecognizers>
                             
                             <!-- Main Background - Black rounded rectangle -->
-                            <Frame BackgroundColor="#1A1A1A"
+                            <Frame BackgroundColor="#4285F4"
                                    CornerRadius="8"
                                    IsClippedToBounds="True"
                                    BorderColor="Transparent"
