@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
+              x:Class="VirtualTradingApp.Views.AddFundsPopup"  
+              CanBeDismissedByTappingOutsideOfPopup="True"  
+              Size="300, 450">
+    <Border BackgroundColor="White"  
+           Stroke="Transparent"
+           Padding="20">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20" />
+        </Border.StrokeShape>
+
+        <!-- Shadow definition -->
+        <Border.Shadow>
+            <Shadow Brush="Black"
+                  Offset="2,2"
+                  Radius="15"
+                  Opacity="0.5" />
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="20">
+            <!-- Title -->
+            <Label Text="Add ₹10,000 to Your Account!"  
+                  FontSize="24"  
+                  FontAttributes="Bold"  
+                  TextColor="#0d1b2a"  
+                  HorizontalOptions="Center"  
+                  HorizontalTextAlignment="Center"/>
+
+            <!-- Body Text -->
+            <Label Text="Watch a short ad to instantly get 10,000 in your wallet."  
+                  FontSize="18"  
+                  TextColor="#4a4e69"  
+                  HorizontalOptions="Center"  
+                  HorizontalTextAlignment="Center"/>
+
+            <!-- Visual Cues - Wallet Image and Countdown -->
+            <Grid RowDefinitions="130" ColumnDefinitions="*,Auto">
+                <!-- Wallet Image -->
+                <Image Grid.Column="0"  
+                       Source="wallet.png"  
+                       HeightRequest="140"   
+                       WidthRequest="160"  
+                       HorizontalOptions="Center"  
+                       VerticalOptions="Center">
+                    <Image.Clip>
+                        <RoundRectangleGeometry CornerRadius="20" Rect="0,0,160,140" />
+                    </Image.Clip>
+                </Image>
+            </Grid>
+
+            <!-- Loader -->
+            <ActivityIndicator x:Name="Loader"
+                     IsVisible="False"
+                     IsRunning="False"
+                     Color="#3a86ff"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center" />
+
+            <!-- Watch Ad Button -->
+            <Button Text="Watch Ad to Get 10,000"  
+                   BackgroundColor="#3a86ff"  
+                   TextColor="White"  
+                   FontAttributes="Bold"  
+                   FontSize="18"  
+                   Padding="10"  
+                   CornerRadius="25"  
+                   HorizontalOptions="Fill"  
+                   ImageSource="play_arrow.png"  
+                   ContentLayout="Left, 10"  
+                   Clicked="OnWatchAdClicked"/>
+
+            <!-- Cancel Button -->
+            <Button Text="Cancel"  
+                   BackgroundColor="Transparent"  
+                   TextColor="#4a4e69"  
+                   FontSize="16"  
+                   HorizontalOptions="Center"  
+                   Clicked="OnCancelClicked"/>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

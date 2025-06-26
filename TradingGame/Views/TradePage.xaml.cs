@@ -1,12 +1,14 @@
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
 using System.Timers;
-using TradingGame.ViewModels;
 using TradingGame.Models;
 using TradingGame.Services;
-using System.Linq;
+using TradingGame.ViewModels;
+using CommunityToolkit.Maui.Views;
 
 namespace TradingGame
 {
@@ -26,6 +28,7 @@ namespace TradingGame
                 InitializeComponent();
                 _userService = new UserService();
                 // Do not call any async method here!
+                SetBannerId();
             }
             catch (Exception ex)
             {
@@ -33,7 +36,14 @@ namespace TradingGame
                 Application.Current.MainPage.DisplayAlert("Error", $"TradePage failed to load: {ex.Message}", "OK");
             }
         }
+       
+        private void SetBannerId()
+        {
 
+            // AdView.AdsId = "ca-app-pub-3940256099942544/6300978111"; //test
+            AdView.AdsId = "ca-app-pub-2536984180867150/9940063999"; //live
+
+        }
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -352,15 +362,42 @@ namespace TradingGame
         
         private async void OnAddMoneyClicked(object sender, EventArgs e)
         {
-            // Add $1000 to the user's balance
-            await _userService.UpdateCashBalanceAsync(1000);
+            try
+            {
+                // Show the Add Funds popup
+                var addFundsPopup = new VirtualTradingApp.Views.AddFundsPopup();
+
+            // Subscribe to the AdCompleted event
+            addFundsPopup.AdCompleted += async (sender, result) =>
+            {
+            if (result.Success)
+            {
+                // Add $1000 to the user's balance
+                await _userService.UpdateCashBalanceAsync(1000);
             
             // Update the displayed balance
             await UpdateCashBalanceDisplay();
             
             // Show a confirmation message
             await DisplayAlert("Virtual Money Added", "Successfully added $1,000 to your account!", "OK");
+                }
+                else
+                {
+                    // Ad was not watched or failed
+                    await DisplayAlert("Error", result.Message, "OK");
+                }
+            };
+
+            // Show the popup using MAUI CommunityToolkit extension method
+            this.ShowPopup(addFundsPopup);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding cash: {ex.Message}");
+                await DisplayAlert("Error", $"Failed to add funds. Please try again later. Error message: {ex.Message}", "OK");
+            }
         }
+      
 
         private async Task CheckAndSetOpenTradeForStock(StockModel stock)
         {

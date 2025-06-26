@@ -4,6 +4,7 @@
              x:Class="TradingGame.ProfilePage"
              xmlns:vm="clr-namespace:TradingGame.ViewModels"
              xmlns:converters="clr-namespace:TradingGame.Converters"
+             xmlns:controls="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
              BackgroundColor="{StaticResource TradingBackground}"
              Title="Your Profile">
     
@@ -152,7 +153,9 @@
                             </Grid>
                         </Frame>
                     </Grid>
-                    
+                    <VerticalStackLayout Padding="0,20,20,0">
+                        <controls:MTAdView x:Name="AdView"></controls:MTAdView>
+                    </VerticalStackLayout>
                     <!-- Closed Trades Section -->
                     <Label Text="{Binding ClosedTrades.Count, StringFormat='Closed Trades ({0})'}"
                            Style="{StaticResource HeaderLabelStyle}" TextColor="Black"/>
